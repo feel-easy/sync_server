@@ -89,7 +89,7 @@ const App = new Vue({
       const params = JSON.stringify(controlParam)
 
       // 使用socket-io
-      this.socket.emit('video-control', params)
+      // this.socket.emit('video-control', params)
 
       // 使用GoEasy
       // this.goEasyConnect.publish({

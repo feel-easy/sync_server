@@ -1,0 +1,8 @@
+version: "3.0"
+services:
+  sync_server:
+    container_name: sync_server
+    build: .
+    command: ./sync_server
+    ports:
+      - "8888:8888"
