@@ -13,33 +13,12 @@ func main() {
 	router := gin.New()
 
 	server := socketio.NewServer(nil)
-
 	server.OnConnect("/", func(s socketio.Conn) error {
-		s.SetContext("")
 		log.Println("connected:", s.ID())
+		server.OnEvent("/control", "video-control", func(s socketio.Conn, msg string) {
+			server.BroadcastToNamespace("/control", "execute", msg)
+		})
 		return nil
-	})
-
-	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
-		log.Println("notice:", msg)
-		s.Emit("reply", "have "+msg)
-	})
-
-	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
-		s.SetContext(msg)
-		return "recv " + msg
-	})
-
-	server.OnEvent("/", "bye", func(s socketio.Conn) string {
-		last := s.Context().(string)
-		s.Emit("bye", last)
-		s.Close()
-		return last
-	})
-
-	server.OnEvent("/video-control", "msg", func(s socketio.Conn, msg string) string {
-		s.Emit("video-control", msg)
-		return msg
 	})
 
 	server.OnError("/", func(s socketio.Conn, e error) {
@@ -59,7 +38,6 @@ func main() {
 
 	router.GET("/socket.io/*any", gin.WrapH(server))
 	router.POST("/socket.io/*any", gin.WrapH(server))
-	router.StaticFS("/web", http.Dir("./web"))
 	router.StaticFS("/video", http.Dir("./asset"))
 	if err := router.Run(":8888"); err != nil {
 		log.Fatal("failed run app: ", err)

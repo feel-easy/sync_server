@@ -185,8 +185,8 @@ const App = new Vue({
 
     /*使用socket-io--------------------------*/
 
-    this.socket = io(); // 替换成你的websocket服务地址
-    this.socket.on('video-control', (res) => {
+    this.socket = io("/control"); // 替换成你的websocket服务地址
+    this.socket.on('execute', (res) => {
       const result = JSON.parse(res);
       if (result.user !== this.userId) {
         this.resultHandler(result)
