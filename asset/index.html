@@ -1,14 +1,16 @@
 <html lang="zh-cn">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <title>sync-player</title>
     <link rel="icon" href="./favicon.png">
     <link rel="stylesheet" href="./style/reset.css">
     <link rel="stylesheet" href="./style/coplay.css">
 </head>
+
 <body>
-<div id="app"></div>
+    <div id="app"></div>
 </body>
 <script src="./script/vue.min.js"></script>
 <script src="./script/socket.io.js"></script>
@@ -22,11 +24,10 @@
                     ref="video"
                     preload="auto"
                     controls
-                    controlsList="nofullscreen nodownload noremoteplayback"
+                    controlsList=" nodownload noremoteplayback"
                     style="width: 100% ;height: auto"
                     playsinline=""
             >
-<!--                <source :src="videoSrc" type="video/mp4"/>-->
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a
                     web browser that
@@ -85,4 +86,5 @@
 </script>
 <script src="./script/hls.js"></script>
 <script src="./script/main.js"></script>
+
 </html>

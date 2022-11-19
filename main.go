@@ -1,33 +1,31 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	socketio "github.com/googollee/go-socket.io"
 )
 
 func main() {
+	router := gin.New()
+
 	server := socketio.NewServer(nil)
 
 	server.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
-		fmt.Println("connected:", s.ID(), s.RemoteAddr(), s.Rooms(), s.Namespace())
+		log.Println("connected:", s.ID())
 		return nil
 	})
 
-	server.OnEvent("/", "msg", func(s socketio.Conn, msg string) {
-		fmt.Println("notice:", msg)
-		s.Emit("video-control", msg)
+	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
+		log.Println("notice:", msg)
+		s.Emit("reply", "have "+msg)
 	})
 
-	server.OnEvent("/", "video-control", func(s socketio.Conn, msg string) {
-		fmt.Println("notice:", msg)
-		s.Emit("video-control", msg)
-	})
-
-	server.OnEvent("/", "msg", func(s socketio.Conn, msg string) string {
+	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
 		s.SetContext(msg)
 		return "recv " + msg
 	})
@@ -39,19 +37,31 @@ func main() {
 		return last
 	})
 
+	server.OnEvent("/video-control", "msg", func(s socketio.Conn, msg string) string {
+		s.Emit("video-control", msg)
+		return msg
+	})
+
 	server.OnError("/", func(s socketio.Conn, e error) {
-		fmt.Println("meet error:", e)
+		log.Println("meet error:", e)
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		fmt.Println("closed", reason)
+		log.Println("closed", reason)
 	})
 
-	go server.Serve()
+	go func() {
+		if err := server.Serve(); err != nil {
+			log.Fatalf("socketio listen error: %s\n", err)
+		}
+	}()
 	defer server.Close()
-	// connection
-	http.Handle("/socket.io/", server)
-	http.Handle("/", http.FileServer(http.Dir("./asset")))
-	log.Println("Serving at localhost:8888...")
-	log.Fatal(http.ListenAndServe(":8888", nil))
+
+	router.GET("/socket.io/*any", gin.WrapH(server))
+	router.POST("/socket.io/*any", gin.WrapH(server))
+	router.StaticFS("/web", http.Dir("./web"))
+	router.StaticFS("/video", http.Dir("./asset"))
+	if err := router.Run(":8888"); err != nil {
+		log.Fatal("failed run app: ", err)
+	}
 }
