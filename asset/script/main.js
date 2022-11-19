@@ -66,6 +66,26 @@ const App = new Vue({
         this.player.msRequestFullscreen()
       }
     },
+    videoPlay() {
+      this.player.play()
+      this.controlParam.action = 'play'
+      this.controlParam.time = this.player.currentTime
+      this.sendMessage(this.controlParam)
+    },
+    videoPause(){
+      this.player.pause()
+      this.controlParam.action = 'pause'
+      this.controlParam.time = this.player.currentTime
+      this.sendMessage(this.controlParam)
+    },
+    videoSeeking(){
+      this.controlParam.time = this.player.currentTime
+      this.sendMessage(this.controlParam)
+    },
+    videoRateChange(){
+      this.controlParam.time = this.player.currentTime
+      this.sendMessage(this.controlParam)
+    },
     playVideo() {
       if (this.playing) {
         this.player.pause()

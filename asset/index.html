@@ -21,6 +21,16 @@
         <div class="video-box">
             <h2 class="video-name"></h2>
             <video
+                preload="auto"
+                controls
+                ref="video"
+                @play="videoPlay"
+                @pause="videoPause"
+                @seeking="videoSeeking"
+                @ratechange="videoRateChange"
+                style="width: 100% ;height: auto"
+                ></video>
+            <!-- <video
                     ref="video"
                     preload="auto"
                     muted
@@ -28,7 +38,7 @@
                     controlsList="nodownload noremoteplayback"
                     style="width: 100% ;height: auto"
                     playsinline=""
-            >
+            > -->
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a
                     web browser that
