@@ -11,7 +11,7 @@ import store from './store/index'
 import router from './router/index'
 
 import '@/icons' // icon
-import '@/permission' // permission control
+// import '@/permission' // permission control
 
 /**
  * If you don't want to use mock-server
