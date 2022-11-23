@@ -1,17 +1,14 @@
 <template>
-  <aside class="nav">
-    <ul class="nav-list">
-      <li
-        class="nav-item flex-center"
-        v-for="(nav, index) in navList"
-        :key="index"
-        :class="{ active: nav.isActive }"
-        @click="navClick(nav)"
-      >
-        {{ nav.name }}
-      </li>
-    </ul>
-  </aside>
+  <el-row>
+    <el-button
+      v-for="(nav, index) in navList"
+      :key="index"
+      :class="{ active: nav.isActive }"
+      @click="navClick(nav)"
+    >
+      {{ nav.name }}
+    </el-button>
+  </el-row>
 </template>
 
 <script lang="ts">
